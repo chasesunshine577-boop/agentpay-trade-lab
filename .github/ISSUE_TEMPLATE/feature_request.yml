@@ -1,0 +1,41 @@
+name: Feature request
+description: 建议新的策略、MCP 工具、风控规则或 Demo 交互
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 使用场景
+      description: 这个功能要解决什么问题？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 描述预期流程、输入、输出和安全边界。
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 涉及模块
+      multiple: true
+      options:
+        - Agent strategy
+        - OKX Market API
+        - x402 payment
+        - MCP DEX tools
+        - Demo UI
+        - Documentation
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 范围确认
+      options:
+        - label: 该建议不会要求仓库保存或上传用户私钥。
+          required: true

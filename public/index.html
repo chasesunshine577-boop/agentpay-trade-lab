@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="AgentPay Trade Lab - OKX Market x402 and OnchainOS MCP trading demo"
+    />
+    <title>AgentPay Trade Lab</title>
+    <link rel="stylesheet" href="/styles.css?v=20260714b" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="AgentPay Trade Lab">
+        <span class="brand-mark" aria-hidden="true">AP</span>
+        <span>
+          <strong>AgentPay</strong>
+          <small>MARKET TO TRADE LAB</small>
+        </span>
+      </a>
+
+      <div class="topbar-actions">
+        <div class="mode-switch" role="group" aria-label="运行模式">
+          <button class="mode-button is-active" data-mode="demo" type="button">
+            Demo
+          </button>
+          <button class="mode-button" data-mode="live" type="button">Live</button>
+        </div>
+        <div class="connection-state" id="connectionState">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="connectionLabel">正在连接</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="panel agent-panel" aria-labelledby="agentTitle">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">NATURAL LANGUAGE STRATEGY</p>
+            <h1 id="agentTitle">Agent Console</h1>
+          </div>
+          <span class="mode-badge" id="modeBadge">DEMO DATA</span>
+        </div>
+
+        <div class="scenario-switch" role="tablist" aria-label="演示场景">
+          <button
+            class="scenario-button is-active"
+            data-scenario="social-hot"
+            type="button"
+            role="tab"
+            aria-selected="true"
+          >
+            <span>01</span>
+            <strong>社媒热榜</strong>
+            <small>x402 + 风险过滤</small>
+          </button>
+          <button
+            class="scenario-button"
+            data-scenario="solana-rwa"
+            type="button"
+            role="tab"
+            aria-selected="false"
+          >
+            <span>02</span>
+            <strong>Solana RWA</strong>
+            <small>市值 + 24h 成交量</small>
+          </button>
+        </div>
+
+        <div class="scenario-note">
+          <span class="scenario-code" id="scenarioCode">SOCIAL HOT</span>
+          <p id="scenarioDescription">
+            读取 X 社媒热榜，连接高级风险标签后再选择可交易候选。
+          </p>
+        </div>
+
+        <div class="conversation" id="conversation" aria-live="polite">
+          <article class="message agent-message">
+            <div class="message-author">AGENT</div>
+            <p>场景已就绪。行情、支付和交易构建会分别展示。</p>
+          </article>
+        </div>
+
+        <div class="prompt-presets" aria-label="示例指令">
+          <button type="button" data-preset="default">策略默认</button>
+          <button type="button" data-preset="conservative">严格风控</button>
+          <button type="button" data-preset="size50">50 USDC</button>
+        </div>
+
+        <form class="composer" id="agentForm">
+          <label for="messageInput">Agent 指令</label>
+          <textarea
+            id="messageInput"
+            name="message"
+            rows="5"
+            maxlength="1000"
+            spellcheck="false"
+          ></textarea>
+          <div class="composer-footer">
+            <label class="preview-toggle">
+              <input id="previewOnly" type="checkbox" checked disabled />
+              <span aria-hidden="true"></span>
+              仅预览
+            </label>
+            <button class="run-button" id="runButton" type="submit">
+              <span class="run-symbol" aria-hidden="true"></span>
+              <span>分析并构建</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel trace-panel" aria-labelledby="traceTitle">
+        <div class="panel-header trace-header">
+          <div>
+            <p class="eyebrow">PROTOCOL TRACE</p>
+            <h2 id="traceTitle">Execution</h2>
+          </div>
+          <span class="run-id" id="runId">NO RUN</span>
+        </div>
+
+        <div class="protocol-strip" aria-label="协议状态">
+          <div><span>MARKET</span><strong id="marketState">IDLE</strong></div>
+          <div><span>x402</span><strong id="x402State">ON DEMAND</strong></div>
+          <div><span>MCP DEX</span><strong id="mcpState">IDLE</strong></div>
+        </div>
+
+        <ol class="trace-list" id="traceList">
+          <li class="trace-empty">
+            <span class="empty-index">00</span>
+            <p>等待 Agent 运行</p>
+          </li>
+        </ol>
+      </section>
+
+      <aside class="insights" aria-label="策略与交易结果">
+        <section class="result-section candidate-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">MARKET SCAN</p>
+              <h2>候选池</h2>
+            </div>
+            <span class="chain-tag">SOLANA · 501</span>
+          </div>
+          <div class="scan-summary">
+            <div>
+              <span>当前选择</span>
+              <strong id="selectedSymbol">AUTO</strong>
+            </div>
+            <div>
+              <span>通过风控</span>
+              <strong id="eligibleCount">-- / --</strong>
+            </div>
+            <div>
+              <span>策略权重</span>
+              <strong id="strategyWeight">40 / 30 / 30</strong>
+            </div>
+          </div>
+          <div class="candidate-list" id="candidateList">
+            <div class="candidate-placeholder"></div>
+            <div class="candidate-placeholder"></div>
+            <div class="candidate-placeholder short"></div>
+          </div>
+        </section>
+
+        <section class="result-section route-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">BEST ROUTE</p>
+              <h2>交易路径</h2>
+            </div>
+            <strong class="route-output" id="routeOutput">-- TOKEN</strong>
+          </div>
+          <div class="route-visual" id="routeVisual">
+            <span class="token-node">USDC</span>
+            <span class="route-line"></span>
+            <span class="dex-node">WAITING</span>
+            <span class="route-line"></span>
+            <span class="token-node accent">TOKEN</span>
+          </div>
+          <div class="quote-metrics">
+            <div><span>价格影响</span><strong id="priceImpact">--</strong></div>
+            <div><span>网络费估算</span><strong id="gasEstimate">--</strong></div>
+            <div><span>最大滑点</span><strong id="maxSlippage">--</strong></div>
+          </div>
+        </section>
+
+        <section class="result-section payment-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">MARKET MICROPAYMENT</p>
+              <h2>x402 Receipt</h2>
+            </div>
+            <span class="payment-status" id="paymentStatus">ON DEMAND</span>
+          </div>
+          <dl class="receipt-grid">
+            <div><dt>协议</dt><dd id="paymentProtocol">x402 v2</dd></div>
+            <div><dt>资产 / 网络</dt><dd id="paymentAsset">--</dd></div>
+            <div><dt>结算金额</dt><dd id="paymentAmount">--</dd></div>
+            <div><dt>付费调用</dt><dd id="paymentCalls">--</dd></div>
+            <div class="wide"><dt>回执</dt><dd id="paymentReceipt">--</dd></div>
+          </dl>
+        </section>
+
+        <section class="result-section transaction-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">SOLANA INSTRUCTIONS</p>
+              <h2>交易预览</h2>
+            </div>
+            <span class="safe-status">NOT BROADCAST</span>
+          </div>
+          <dl class="transaction-grid">
+            <div><dt>Wallet</dt><dd id="transactionWallet">--</dd></div>
+            <div><dt>Program</dt><dd id="transactionProgram">--</dd></div>
+            <div><dt>Instructions / LUT</dt><dd id="transactionInstructions">--</dd></div>
+            <div><dt>Payload</dt><dd id="transactionData">--</dd></div>
+          </dl>
+        </section>
+      </aside>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js?v=20260714b" defer></script>
+  </body>
+</html>

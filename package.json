@@ -1,0 +1,25 @@
+{
+  "name": "agentpay-trade-lab",
+  "version": "0.1.0",
+  "description": "Open-source AI trading demo using OKX OnchainOS MCP tools and x402 micropayments.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "client": "node src/client.js",
+    "check": "node scripts/check.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "@okxweb3/x402-evm": "0.2.1",
+    "@okxweb3/x402-fetch": "0.1.0",
+    "viem": "2.54.6",
+    "zod": "3.25.76"
+  },
+  "packageManager": "pnpm@10.12.1"
+}

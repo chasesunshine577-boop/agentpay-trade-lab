@@ -1,0 +1,67 @@
+name: Bug report
+description: 报告可复现的 Demo、MCP、Market API 或 x402 问题
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请勿提交私钥、OKX Secret、Passphrase、支付签名或真实钱包资产截图。
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 运行模式
+      options:
+        - Demo
+        - Live
+        - 两者都有
+    validations:
+      required: true
+  - type: dropdown
+    id: scenario
+    attributes:
+      label: 场景
+      options:
+        - 社媒热榜
+        - Solana RWA
+        - 启动或通用界面
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 说明预期行为和实际行为。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 启动服务
+        2. 选择场景
+        3. 输入指令
+        4. 观察错误
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境
+      placeholder: macOS 15 / Node.js 22 / Chrome 版本
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 已脱敏日志
+      render: shell
+  - type: checkboxes
+    id: security
+    attributes:
+      label: 安全确认
+      options:
+        - label: 我已确认内容中不包含密钥、支付签名或其他敏感信息。
+          required: true
